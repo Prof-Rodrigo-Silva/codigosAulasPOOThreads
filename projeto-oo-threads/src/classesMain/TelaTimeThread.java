@@ -5,6 +5,10 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,6 +28,45 @@ public class TelaTimeThread extends JDialog {
 	
 	private JButton jButtonStart = new JButton("Start");
 	private JButton jButtonStop = new JButton("Stop");
+	
+	private Runnable thread1 = new Runnable() {
+		
+		@Override
+		public void run() {
+			while(true) {
+				mostraTempo1.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm.s")));
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+	};
+	
+	private Runnable thread2 = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					mostraTempo2.setText(LocalDateTime.now().
+							format(DateTimeFormatter.
+							ofPattern("dd/MM/yyyy hh:mm.s")));
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		};
+		
+	private Thread thread1Time;
+	private Thread thread2Time;
 	
 	public TelaTimeThread() {
 		setTitle("Tela Time com Thread");
@@ -65,6 +108,28 @@ public class TelaTimeThread extends JDialog {
 		gridBagConstraints.gridx ++;
 		jPanel.add(jButtonStop, gridBagConstraints);
 		
+		
+		jButtonStart.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				thread1Time = new Thread(thread1);
+				thread2Time = new Thread(thread2);
+				thread1Time.start();
+				thread2Time.start();
+				
+			}
+		});
+		
+		jButtonStop.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				thread1Time.stop();
+				thread2Time.stop();
+				
+			}
+		});
 		
 		add(jPanel, BorderLayout.WEST);
 		setVisible(true);
