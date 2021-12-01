@@ -78,14 +78,24 @@ private JPanel jPanel = new JPanel(new GridBagLayout());
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				ObjetoFilaThread filaThread =  new ObjetoFilaThread();
+				if(fila==null) {
+					
+					fila = new ImplementacaoFilaThread();
+					fila.start();
+					
+				}
 				
-				filaThread.setNome(textNome.getText());
-				filaThread.setEmail(textEmail.getText());
 				
-				fila.add(filaThread);
-				
-				
+				for(int qtd = 0; qtd < 100; qtd++) {
+					
+					ObjetoFilaThread filaThread =  new ObjetoFilaThread();
+					
+					filaThread.setNome(textNome.getText()+" - "+(qtd+1));
+					filaThread.setEmail(textEmail.getText());
+					
+					fila.add(filaThread);
+					
+				}
 			}
 		});
 		
@@ -94,7 +104,8 @@ private JPanel jPanel = new JPanel(new GridBagLayout());
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			
-	
+				fila.stop();
+				fila = null;
 				
 			}
 		});
